@@ -16,7 +16,6 @@ class CitiesRepository @Inject constructor(
         config = PagingConfig(15, maxSize = 15 + (15 * 2), enablePlaceholders = true),
         remoteMediator = CitiesRemoteMediator(citiesDb, query, apiService)
     ) {
-        if (query == null) citiesDb.cityDao().fetchAllCity() else citiesDb.cityDao()
-            .fetchAllCityByQuery(query)
+        citiesDb.cityDao().fetchAllCity()
     }.flow
 }

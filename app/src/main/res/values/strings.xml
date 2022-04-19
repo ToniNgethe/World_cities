@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Cities of the world</string>
+    <string name="search_hint">City name</string>
 </resources>

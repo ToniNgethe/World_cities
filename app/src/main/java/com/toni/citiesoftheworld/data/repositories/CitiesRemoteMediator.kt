@@ -1,5 +1,6 @@
 package com.toni.citiesoftheworld.data.repositories
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -19,7 +20,6 @@ class CitiesRemoteMediator(
     private val query: String? = null,
     private val apiServices: CitiesService
 ) : RemoteMediator<Int, City>() {
-
     override suspend fun initialize(): InitializeAction {
         // Require that remote REFRESH is launched on initial load and succeeds before launching
         // remote PREPEND / APPEND.
@@ -38,7 +38,9 @@ class CitiesRemoteMediator(
             }
 
 
-            val response = apiServices.fetch(page = page, query = query)
+            val response = apiServices.fetch(
+                page = page, query = if (query?.isEmpty() == true) null else query
+            )
             val isEndOfList = response.data?.items?.isEmpty()
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {

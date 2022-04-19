@@ -1,12 +1,17 @@
 package com.toni.citiesoftheworld.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import com.toni.citiesoftheworld.databinding.ActivityCitiesBinding
+import com.toni.citiesoftheworld.presentation.adapter.CitiesAdapter
+import com.toni.citiesoftheworld.presentation.adapter.CitiesLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,6 +28,17 @@ class CitiesActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setUpAdapter()
+        initSearch()
+    }
+
+    private fun initSearch() {
+        binding.etSearch.doOnTextChanged { text, start, before, count ->
+            text?.let {
+                if (text.length >= 2) {
+                    viewModel.submitQuery(text.trim().toString())
+                }
+            }
+        }
     }
 
     private fun setUpAdapter() {
@@ -31,11 +47,21 @@ class CitiesActivity : AppCompatActivity() {
             header = CitiesLoadStateAdapter(citiesAdapter),
             footer = CitiesLoadStateAdapter(citiesAdapter)
         )
+
         lifecycleScope.launchWhenResumed {
-            citiesAdapter.loadStateFlow.collect { loadStatus ->
+            citiesAdapter.loadStateFlow.collect { loadState ->
+                // display progress bar
                 binding.pbCities.apply {
-                    visibility = if (loadStatus.mediator?.refresh is LoadState.Loading) View.VISIBLE
+                    visibility = if (loadState.mediator?.refresh is LoadState.Loading) View.VISIBLE
                     else View.GONE
+                }
+
+                // in case of an error
+                val errorState = loadState.source.append as? LoadState.Error
+                    ?: loadState.source.prepend as? LoadState.Error
+
+                errorState?.let {
+                    Toast.makeText(this@CitiesActivity, "${it.error}", Toast.LENGTH_LONG).show()
                 }
             }
         }
