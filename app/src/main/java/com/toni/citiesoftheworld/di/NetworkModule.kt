@@ -2,7 +2,7 @@ package com.toni.citiesoftheworld.di
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.toni.citiesoftheworld.BuildConfig
-import com.toni.citiesoftheworld.data.services.CitiesServices
+import com.toni.citiesoftheworld.data.services.CitiesService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,6 +36,6 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideCitiesService(retrofit: Retrofit): CitiesServices =
-        retrofit.create(CitiesServices::class.java)
+    fun provideCitiesService(retrofit: Retrofit): CitiesService =
+        retrofit.create(CitiesService::class.java)
 }
