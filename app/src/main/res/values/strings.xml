@@ -3,4 +3,6 @@
     <string name="search_hint">City name</string>
     <string name="permission_error">All permissions must be granted to view map</string>
     <string name="unable_to_get_your_location_error">Unable to get your current location error</string>
+    <string name="welcome_to_cities_of_the_world">Cities of the world</string>
+    <string name="welcome_to">Welcome to the</string>
 </resources>
