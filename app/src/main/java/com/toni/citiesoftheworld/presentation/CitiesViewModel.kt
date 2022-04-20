@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.toni.citiesoftheworld.domain.model.City
 import com.toni.citiesoftheworld.domain.repository.CitiesRepository
+import com.toni.citiesoftheworld.utils.AppDispatchers
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
-class CitiesViewModel @Inject constructor(private val repository: CitiesRepository) : ViewModel() {
+class CitiesViewModel @Inject constructor(private val repository: CitiesRepository, private val dispatchers: AppDispatchers) : ViewModel() {
 
     private val querySharedFlow = MutableStateFlow("")
 
@@ -29,7 +30,7 @@ class CitiesViewModel @Inject constructor(private val repository: CitiesReposito
     }
 
     fun fetchCachedCities() {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatchers.default()) {
             repository.fetchCachedCities().collect { cities ->
                 _storedCities.emit(cities)
             }

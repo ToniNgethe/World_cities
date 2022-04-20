@@ -2,8 +2,10 @@ package com.toni.citiesoftheworld
 
 import android.text.TextWatcher
 import androidx.recyclerview.widget.ListUpdateCallback
+import com.toni.citiesoftheworld.utils.AppDispatchers
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -17,7 +19,7 @@ val noopListUpdateCallback = object : ListUpdateCallback {
     override fun onChanged(position: Int, count: Int, payload: Any?) {}
 }
 
-class TestCoroutineRule(val dispatcher: CoroutineDispatcher = UnconfinedTestDispatcher()) :
+class TestCoroutineRule @OptIn(ExperimentalCoroutinesApi::class) constructor(val dispatcher: CoroutineDispatcher = UnconfinedTestDispatcher()) :
     TestWatcher() {
     override fun starting(description: Description) {
         super.starting(description)
@@ -28,4 +30,13 @@ class TestCoroutineRule(val dispatcher: CoroutineDispatcher = UnconfinedTestDisp
         super.finished(description)
         Dispatchers.resetMain()
     }
+}
+
+class TestDispatchers() : AppDispatchers {
+    override fun io(): CoroutineDispatcher = UnconfinedTestDispatcher()
+
+    override fun main(): CoroutineDispatcher = UnconfinedTestDispatcher()
+
+    override fun default(): CoroutineDispatcher = UnconfinedTestDispatcher()
+
 }
