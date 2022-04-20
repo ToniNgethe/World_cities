@@ -37,6 +37,8 @@ class CitiesActivity : AppCompatActivity() {
                 if (text.length >= 2) {
                     viewModel.submitQuery(text.trim().toString())
                 }
+            } ?: kotlin.run {
+                viewModel.submitQuery("")
             }
         }
     }

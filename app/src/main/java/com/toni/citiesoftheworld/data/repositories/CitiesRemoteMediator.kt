@@ -20,6 +20,7 @@ class CitiesRemoteMediator(
     private val query: String? = null,
     private val apiServices: CitiesService
 ) : RemoteMediator<Int, City>() {
+
     override suspend fun initialize(): InitializeAction {
         // Require that remote REFRESH is launched on initial load and succeeds before launching
         // remote PREPEND / APPEND.
@@ -36,7 +37,6 @@ class CitiesRemoteMediator(
                     pageKeyData as Int
                 }
             }
-
 
             val response = apiServices.fetch(
                 page = page, query = if (query?.isEmpty() == true) null else query
@@ -62,6 +62,8 @@ class CitiesRemoteMediator(
         } catch (e: IOException) {
             MediatorResult.Error(e)
         } catch (e: HttpException) {
+            MediatorResult.Error(e)
+        } catch (e: Exception){
             MediatorResult.Error(e)
         }
     }
